@@ -24,15 +24,13 @@ library(umap)
 
 run.lca <- function(K,df, verbose){
   if(verbose){print(paste0("Running LCA with ", K, " classes"))}
-  lca.data <- df + 1
   formula <- as.formula(paste0("cbind(",paste(colnames(df),collapse=","),")~1"))
   lca.model <- poLCA(formula, data=(df+1), nclass=K, na.rm=FALSE, verbose=FALSE)
   return(data.frame(lca.model$posterior))
 }
 
 get.pcs <- function(i,lca.models){
-  m <- lca.models[[i]]
-  pca <- prcomp(m, center = TRUE, scale. = TRUE)
+  pca <- prcomp(lca.models[[i]], center = TRUE, scale. = TRUE)
   pcs <- as.data.frame(pca$x)
   colnames(pcs) <- paste0(colnames(pcs),"-",i)
   return(pcs)
